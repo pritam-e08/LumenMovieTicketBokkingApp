@@ -20,7 +20,7 @@ app.use('/api/inngest', serve({client: inngest, functions}))
 // Routes
 
 app.get('/', (req, res)=>{
-    res.send('Server is Live')
+    res.send('Hi this is Pritam')
 })
 
 
