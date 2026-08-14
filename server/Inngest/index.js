@@ -50,7 +50,7 @@ const SyncUserUpdation = inngest.createFunction(
         const {id, first_name, last_name, email_addresses, image_url} = event.data
         const UserData = {
             _id:id,
-            name:first_name + ' ' last_name,
+            name:first_name + ' ' + last_name,
             emai:email_addresses[0].email_address,
             image:image_url
         }
