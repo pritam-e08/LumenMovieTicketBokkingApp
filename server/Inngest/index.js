@@ -1,9 +1,11 @@
 import { Inngest } from "inngest";
-export const inngest = new Inngest({ id: "movie-ticket-booking" });
+import User from "../models/User.js";
 
-// Create an empty array where we'll export future Inngest functions
+export const inngest = new Inngest({
+  id: "movie-ticket-booking",
+});
 
-// Saving Inngest Data to Database
+// Create user
 const SyncUserCreation = inngest.createFunction(
   {
     id: "sync-user-from-clerk",
@@ -21,30 +23,32 @@ const SyncUserCreation = inngest.createFunction(
     };
 
     await User.create(UserData);
-  },
+  }
 );
 
+// Delete user
 const SyncUserDeletion = inngest.createFunction(
   {
     id: "delete-user-with-clerk",
     triggers: [{ event: "clerk/user.deleted" }],
   },
-
   async ({ event }) => {
     const { id } = event.data;
+
     await User.findByIdAndDelete(id);
-  },
+  }
 );
 
+// Update user
 const SyncUserUpdation = inngest.createFunction(
   {
     id: "update-user-with-clerk",
     triggers: [{ event: "clerk/user.updated" }],
   },
-
   async ({ event }) => {
     const { id, first_name, last_name, email_addresses, image_url } =
       event.data;
+
     const UserData = {
       _id: id,
       name: first_name + " " + last_name,
@@ -52,8 +56,12 @@ const SyncUserUpdation = inngest.createFunction(
       image: image_url,
     };
 
-    await User.findByIdAndUpdate(id, user);
-  },
+    await User.findByIdAndUpdate(id, UserData);
+  }
 );
 
-export const functions = [SyncUserCreation, SyncUserDeletion, SyncUserUpdation];
+export const functions = [
+  SyncUserCreation,
+  SyncUserDeletion,
+  SyncUserUpdation,
+];
